@@ -1,0 +1,3139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ESPRESSO RAVE — Post-Combine Morning Chaos</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Antonio:wght@700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --neon-yellow: #ffff00;
+            --neon-cyan: #00ffff;
+            --deep-black: #0a0a0a;
+            --dark-gray: #1a1a1a;
+            --electric-pink: #ff00ff;
+        }
+
+        body {
+            font-family: 'JetBrains Mono', monospace;
+            background: var(--deep-black);
+            color: var(--neon-yellow);
+            overflow-x: hidden;
+            cursor: crosshair;
+            position: relative;
+        }
+
+        /* Hamburger Menu */
+        .hamburger-menu {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 2000;
+            width: 50px;
+            height: 50px;
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid var(--neon-yellow);
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 20px rgba(255, 255, 0, 0.3);
+        }
+
+        .hamburger-menu:hover {
+            border-color: var(--neon-cyan);
+            box-shadow: 0 0 30px var(--neon-cyan);
+            transform: scale(1.05);
+        }
+
+        .hamburger-icon {
+            width: 25px;
+            height: 20px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .hamburger-icon span {
+            display: block;
+            width: 100%;
+            height: 3px;
+            background: var(--neon-yellow);
+            border-radius: 2px;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px var(--neon-yellow);
+        }
+
+        .hamburger-menu:hover .hamburger-icon span {
+            background: var(--neon-cyan);
+            box-shadow: 0 0 10px var(--neon-cyan);
+        }
+
+        /* Side Menu */
+        .side-menu {
+            position: fixed;
+            top: 0;
+            left: -300px;
+            width: 300px;
+            height: 100vh;
+            background: rgba(10, 10, 10, 0.98);
+            border-right: 3px solid var(--neon-yellow);
+            z-index: 1999;
+            transition: left 0.4s ease;
+            padding: 80px 0 40px;
+            box-shadow: 5px 0 30px rgba(0, 0, 0, 0.8);
+        }
+
+        .side-menu.active {
+            left: 0;
+        }
+
+        .menu-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 2rem;
+            color: var(--neon-yellow);
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--neon-yellow);
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .menu-close:hover {
+            color: var(--electric-pink);
+            border-color: var(--electric-pink);
+            transform: rotate(90deg);
+            box-shadow: 0 0 20px var(--electric-pink);
+        }
+
+        .menu-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .menu-list li {
+            margin: 0;
+            border-bottom: 1px solid rgba(255, 255, 0, 0.1);
+        }
+
+        .menu-list a {
+            display: block;
+            padding: 20px 30px;
+            font-family: 'Antonio', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--neon-yellow);
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .menu-list a::before {
+            content: '';
+            position: absolute;
+            left: -100%;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.1), transparent);
+            transition: left 0.4s ease;
+        }
+
+        .menu-list a:hover::before {
+            left: 100%;
+        }
+
+        .menu-list a:hover {
+            color: var(--neon-cyan);
+            padding-left: 40px;
+            text-shadow: 0 0 20px var(--neon-cyan);
+        }
+
+        /* Overlay when menu is open */
+        .menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1998;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+        }
+
+        .menu-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* RSVP Luma Section */
+        .rsvp-section {
+            margin: 100px auto;
+            max-width: 700px;
+            padding: 0 20px;
+            text-align: center;
+        }
+
+        .rsvp-description {
+            font-size: 1.1rem;
+            color: var(--electric-pink);
+            margin-top: -20px;
+            margin-bottom: 40px;
+            letter-spacing: 0.15em;
+            text-transform: lowercase;
+            font-style: italic;
+        }
+
+        .rsvp-container {
+            background: rgba(0, 0, 0, 0.6);
+            border: 3px solid var(--neon-yellow);
+            border-radius: 15px;
+            padding: 50px 40px;
+            position: relative;
+            overflow: hidden;
+            animation: borderGlow 2s ease-in-out infinite;
+        }
+
+        .rsvp-container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 0, 0.05), transparent);
+            animation: menuShine 3s infinite;
+        }
+
+        .luma-logo {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            animation: iconBounce 1s ease-in-out infinite;
+        }
+
+        .rsvp-text {
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.6;
+            margin-bottom: 30px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .luma-button {
+            display: inline-block;
+            font-family: 'Antonio', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 20px 50px;
+            background: var(--neon-cyan);
+            color: var(--deep-black);
+            border: 3px solid var(--neon-yellow);
+            text-decoration: none;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            border-radius: 5px;
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.4);
+            z-index: 1;
+        }
+
+        .luma-button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: var(--electric-pink);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s ease, height 0.6s ease;
+        }
+
+        .luma-button:hover::before {
+            width: 400px;
+            height: 400px;
+        }
+
+        .luma-button:hover {
+            color: var(--deep-black);
+            border-color: var(--electric-pink);
+            box-shadow: 0 0 50px var(--electric-pink);
+            transform: translateY(-3px);
+        }
+
+        .luma-button span {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Smooth scroll */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Gym equipment background */
+        .gym-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.08;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* Barbell silhouettes */
+        .gym-bg::before {
+            content: '';
+            position: absolute;
+            top: 20%;
+            left: 10%;
+            width: 200px;
+            height: 8px;
+            background: var(--neon-yellow);
+            box-shadow: 
+                -20px 0 0 15px var(--neon-yellow),
+                220px 0 0 15px var(--neon-yellow),
+                0 0 30px var(--neon-yellow);
+            animation: equipmentFloat 4s ease-in-out infinite;
+        }
+
+        /* Weight plates */
+        .gym-bg::after {
+            content: '';
+            position: absolute;
+            bottom: 25%;
+            right: 15%;
+            width: 80px;
+            height: 80px;
+            border: 10px solid var(--neon-cyan);
+            border-radius: 50%;
+            box-shadow: 
+                100px 50px 0 0 var(--neon-cyan),
+                -50px 80px 0 0 var(--electric-pink),
+                0 0 40px var(--neon-cyan);
+            animation: equipmentFloat 5s ease-in-out infinite 1s;
+        }
+
+        @keyframes equipmentFloat {
+            0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0.08; }
+            50% { transform: translateY(-30px) rotate(5deg); opacity: 0.12; }
+        }
+
+        /* Kettlebell */
+        .gym-equipment-1 {
+            position: fixed;
+            top: 50%;
+            left: 5%;
+            width: 60px;
+            height: 60px;
+            background: var(--electric-pink);
+            border-radius: 50%;
+            opacity: 0.06;
+            z-index: 0;
+            animation: equipmentFloat 6s ease-in-out infinite 0.5s;
+        }
+
+        .gym-equipment-1::before {
+            content: '';
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 30px;
+            height: 20px;
+            border: 8px solid var(--electric-pink);
+            border-bottom: none;
+            border-radius: 20px 20px 0 0;
+        }
+
+        /* Dumbbell */
+        .gym-equipment-2 {
+            position: fixed;
+            bottom: 30%;
+            left: 20%;
+            width: 120px;
+            height: 8px;
+            background: var(--neon-cyan);
+            opacity: 0.07;
+            z-index: 0;
+            animation: equipmentFloat 5.5s ease-in-out infinite 2s;
+        }
+
+        .gym-equipment-2::before,
+        .gym-equipment-2::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 25px;
+            height: 40px;
+            background: var(--neon-cyan);
+            border-radius: 5px;
+        }
+
+        .gym-equipment-2::before { left: -5px; }
+        .gym-equipment-2::after { right: -5px; }
+
+        /* Jump rope */
+        .gym-equipment-3 {
+            position: fixed;
+            top: 15%;
+            right: 10%;
+            width: 150px;
+            height: 100px;
+            border: 4px solid var(--neon-yellow);
+            border-top: none;
+            border-radius: 0 0 75px 75px;
+            opacity: 0.06;
+            z-index: 0;
+            animation: ropeSwing 3s ease-in-out infinite;
+        }
+
+        @keyframes ropeSwing {
+            0%, 100% { transform: rotate(-10deg); }
+            50% { transform: rotate(10deg); }
+        }
+
+        /* More weight plates scattered */
+        .gym-equipment-4 {
+            position: fixed;
+            top: 60%;
+            right: 25%;
+            width: 50px;
+            height: 50px;
+            border: 8px solid var(--electric-pink);
+            border-radius: 50%;
+            opacity: 0.05;
+            z-index: 0;
+            animation: equipmentFloat 7s ease-in-out infinite 1.5s;
+        }
+
+        /* Animated background grid */
+        .bg-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                repeating-linear-gradient(0deg, transparent, transparent 49px, rgba(255, 255, 0, 0.03) 49px, rgba(255, 255, 0, 0.03) 50px),
+                repeating-linear-gradient(90deg, transparent, transparent 49px, rgba(255, 255, 0, 0.03) 49px, rgba(255, 255, 0, 0.03) 50px);
+            animation: gridPulse 4s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes gridPulse {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.6; }
+        }
+
+        .scanline {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--neon-cyan), transparent);
+            animation: scan 3s linear infinite;
+            pointer-events: none;
+            z-index: 100;
+            opacity: 0.4;
+        }
+
+        @keyframes scan {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(100vh); }
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        /* Hero section */
+        .hero {
+            text-align: center;
+            padding: 60px 0 80px;
+            position: relative;
+        }
+
+        /* Mascot */
+        .mascot {
+            position: relative;
+            width: 240px;
+            height: 260px;
+            margin: 0 auto 40px;
+            animation: mascotRave 0.4s ease-in-out infinite;
+        }
+
+        @keyframes mascotRave {
+            0%, 100% { transform: translateY(0) rotate(-5deg); }
+            25% { transform: translateY(-20px) rotate(5deg); }
+            50% { transform: translateY(-10px) rotate(-5deg); }
+            75% { transform: translateY(-25px) rotate(5deg); }
+        }
+
+        .mascot-body {
+            position: relative;
+            width: 140px;
+            height: 160px;
+            margin: 0 auto;
+        }
+
+        /* Cat head */
+        .mascot-face {
+            width: 110px;
+            height: 95px;
+            background: var(--neon-yellow);
+            border-radius: 50% 50% 45% 45%;
+            position: relative;
+            margin: 0 auto;
+            box-shadow: 0 0 50px rgba(255, 255, 0, 0.8);
+            animation: headThrash 0.3s ease-in-out infinite;
+        }
+
+        @keyframes headThrash {
+            0%, 100% { transform: rotate(-8deg); }
+            50% { transform: rotate(8deg); }
+        }
+
+        /* Cat ears - wilder */
+        .mascot-face::before,
+        .mascot-face::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 0;
+            border-left: 22px solid transparent;
+            border-right: 22px solid transparent;
+            border-bottom: 40px solid var(--neon-yellow);
+            top: -30px;
+            filter: drop-shadow(0 0 20px var(--neon-yellow));
+        }
+
+        .mascot-face::before {
+            left: 2px;
+            transform: rotate(-25deg);
+            animation: earRave 0.3s ease-in-out infinite;
+        }
+
+        .mascot-face::after {
+            right: 2px;
+            transform: rotate(25deg);
+            animation: earRave 0.3s ease-in-out infinite 0.15s;
+        }
+
+        @keyframes earRave {
+            0%, 100% { transform: rotate(25deg) translateY(0) scale(1); }
+            50% { transform: rotate(25deg) translateY(-8px) scale(1.1); }
+        }
+
+        /* Eyes - WIDE and intense */
+        .mascot-eyes {
+            position: absolute;
+            top: 32%;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 30px;
+        }
+
+        .eye {
+            width: 16px;
+            height: 22px;
+            background: var(--deep-black);
+            border-radius: 50%;
+            position: relative;
+            animation: eyesWild 0.5s ease-in-out infinite;
+        }
+
+        @keyframes eyesWild {
+            0%, 90%, 100% { transform: scaleY(1) scaleX(1); }
+            95% { transform: scaleY(0.1) scaleX(1.3); }
+        }
+
+        .eye::after {
+            content: '';
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: var(--electric-pink);
+            border-radius: 50%;
+            top: 25%;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: pupilCrazy 0.2s ease-in-out infinite;
+            box-shadow: 0 0 10px var(--electric-pink);
+        }
+
+        @keyframes pupilCrazy {
+            0%, 100% { top: 25%; left: 50%; }
+            25% { top: 30%; left: 60%; }
+            50% { top: 25%; left: 40%; }
+            75% { top: 30%; left: 50%; }
+        }
+
+        /* Tongue out - party mode */
+        .mascot-mouth {
+            position: absolute;
+            bottom: 30%;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .mascot-mouth::before {
+            content: '';
+            position: absolute;
+            width: 10px;
+            height: 8px;
+            background: var(--electric-pink);
+            border-radius: 50% 50% 50% 50%;
+            left: 50%;
+            transform: translateX(-50%);
+            box-shadow: 0 0 15px var(--electric-pink);
+        }
+
+        /* Tongue sticking out */
+        .mascot-mouth::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 12px;
+            background: var(--electric-pink);
+            border-radius: 0 0 50% 50%;
+            top: 6px;
+            left: 50%;
+            transform: translateX(-50%);
+            box-shadow: 0 0 10px var(--electric-pink);
+            animation: tongueWag 0.3s ease-in-out infinite;
+        }
+
+        @keyframes tongueWag {
+            0%, 100% { transform: translateX(-50%) rotate(-5deg); }
+            50% { transform: translateX(-50%) rotate(5deg); }
+        }
+
+        /* Headphones - bigger and flashier */
+        .coffee-cup {
+            position: absolute;
+            top: 32%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 150px;
+            height: 60px;
+            pointer-events: none;
+        }
+
+        .coffee-cup::before,
+        .coffee-cup::after {
+            content: '';
+            position: absolute;
+            width: 35px;
+            height: 35px;
+            background: var(--neon-cyan);
+            border: 5px solid var(--deep-black);
+            border-radius: 50%;
+            box-shadow: 0 0 30px var(--neon-cyan), inset 0 0 15px rgba(0, 255, 255, 0.5);
+        }
+
+        .coffee-cup::before {
+            left: -10px;
+            animation: headphoneBass 0.2s ease-in-out infinite;
+        }
+
+        .coffee-cup::after {
+            right: -10px;
+            animation: headphoneBass 0.2s ease-in-out infinite 0.1s;
+        }
+
+        @keyframes headphoneBass {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 30px var(--neon-cyan); }
+            50% { transform: scale(1.2); box-shadow: 0 0 50px var(--neon-cyan), 0 0 20px var(--electric-pink); }
+        }
+
+        /* Body */
+        .mascot-face ~ div:first-of-type {
+            width: 90px;
+            height: 70px;
+            background: var(--neon-yellow);
+            border-radius: 40% 40% 50% 50%;
+            margin: -10px auto 0;
+            box-shadow: 0 0 40px rgba(255, 255, 0, 0.5);
+            animation: bodyShake 0.2s ease-in-out infinite;
+        }
+
+        @keyframes bodyShake {
+            0%, 100% { transform: translateX(-3px); }
+            50% { transform: translateX(3px); }
+        }
+
+        /* Iced Matcha - LEFT HAND */
+        .energy-waves {
+            position: absolute;
+            bottom: 10px;
+            left: -30px;
+            width: 35px;
+            height: 50px;
+            animation: drinkBounce 0.3s ease-in-out infinite;
+        }
+
+        @keyframes drinkBounce {
+            0%, 100% { transform: rotate(-20deg) translateY(0); }
+            50% { transform: rotate(-20deg) translateY(-10px); }
+        }
+
+        /* Matcha cup */
+        .energy-waves::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 32px;
+            height: 48px;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.15) 0%, rgba(136, 204, 136, 0.4) 20%, rgba(76, 175, 80, 0.7) 100%);
+            border: 3px solid var(--neon-cyan);
+            border-radius: 3px 3px 8px 8px;
+            box-shadow: 0 0 20px rgba(76, 175, 80, 0.6), inset 0 0 15px rgba(76, 175, 80, 0.3);
+        }
+
+        /* Matcha straw */
+        .energy-waves {
+            position: absolute;
+            bottom: 10px;
+            left: -30px;
+            width: 35px;
+            height: 50px;
+            animation: drinkBounce 0.3s ease-in-out infinite;
+        }
+
+        .mascot-body {
+            position: relative;
+            width: 140px;
+            height: 160px;
+            margin: 0 auto;
+        }
+
+        /* Straw for matcha */
+        .mascot-body > .energy-waves::after {
+            content: '';
+            position: absolute;
+            left: 5px;
+            bottom: 45px;
+            width: 3px;
+            height: 28px;
+            background: var(--neon-cyan);
+            transform: rotate(10deg);
+            box-shadow: 0 0 8px var(--neon-cyan);
+            z-index: 11;
+        }
+
+        /* Matcha ice cubes visible */
+        .energy-waves > div {
+            content: '';
+            position: absolute;
+            top: 12px;
+            left: 8px;
+            width: 8px;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.7);
+            box-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+        }
+
+        /* Matcha spill */
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: 60px;
+            left: 50%;
+            margin-left: -90px;
+            width: 30px;
+            height: 35px;
+            background: radial-gradient(ellipse at top, rgba(76, 175, 80, 0.6), transparent 70%);
+            border-radius: 50%;
+            animation: spillDrip 0.8s ease-in-out infinite 0.4s;
+        }
+
+        /* Matcha drip */
+        .hero::before {
+            content: '';
+            position: absolute;
+            bottom: 70px;
+            left: 50%;
+            margin-left: -82px;
+            width: 4px;
+            height: 15px;
+            background: linear-gradient(180deg, rgba(76, 175, 80, 0.8), rgba(76, 175, 80, 0.3));
+            border-radius: 50%;
+            animation: dripFall 0.6s ease-in-out infinite;
+            z-index: 9;
+        }
+
+        /* Matcha ice cubes */
+        .energy-waves::after {
+            content: '□ □';
+            position: absolute;
+            top: 5px;
+            left: 6px;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 10px;
+            line-height: 1.2;
+            font-weight: bold;
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
+        }
+
+        /* Iced Coffee - RIGHT HAND */
+        .mascot-body::after {
+            content: '';
+            position: absolute;
+            bottom: 10px;
+            right: -30px;
+            width: 35px;
+            height: 50px;
+            animation: drinkBounce 0.3s ease-in-out infinite 0.15s;
+        }
+
+        /* Coffee cup */
+        .mascot-body::before {
+            content: '';
+            position: absolute;
+            bottom: 10px;
+            right: -30px;
+            width: 32px;
+            height: 48px;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.15) 0%, rgba(101, 67, 33, 0.4) 20%, rgba(139, 69, 19, 0.7) 100%);
+            border: 3px solid var(--electric-pink);
+            border-radius: 3px 3px 8px 8px;
+            box-shadow: 0 0 20px var(--electric-pink), inset 0 0 15px rgba(139, 69, 19, 0.3);
+            animation: drinkBounce 0.3s ease-in-out infinite 0.15s;
+            z-index: 10;
+        }
+
+        /* Coffee straw */
+        .mascot-body .energy-waves::before {
+            content: '';
+            position: absolute;
+            right: -25px;
+            bottom: 50px;
+            width: 3px;
+            height: 30px;
+            background: var(--electric-pink);
+            transform: rotate(-10deg);
+            box-shadow: 0 0 8px var(--electric-pink);
+            z-index: 11;
+        }
+
+        /* Swiss Flag - LEFT HAND */
+        .mascot-body .energy-waves {
+            position: absolute;
+            bottom: 10px;
+            left: -50px;
+            width: 50px;
+            height: 45px;
+            animation: flagWave 0.5s ease-in-out infinite;
+        }
+
+        @keyframes flagWave {
+            0%, 100% { transform: rotate(-15deg) translateY(0); }
+            50% { transform: rotate(-10deg) translateY(-8px); }
+        }
+
+        /* Flag pole */
+        .mascot-body .energy-waves::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 3px;
+            height: 55px;
+            background: linear-gradient(180deg, var(--neon-yellow), rgba(255, 255, 0, 0.5));
+            box-shadow: 0 0 10px var(--neon-yellow);
+        }
+
+        /* Swiss flag with cross */
+        .mascot-body > .energy-waves {
+            background: #FF0000;
+            border: 2px solid white;
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.8);
+            border-radius: 2px;
+            overflow: visible;
+        }
+
+        .mascot-body > .energy-waves::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 30px;
+            height: 8px;
+            background: white;
+            box-shadow: 
+                0 0 5px rgba(255, 255, 255, 0.8),
+                0 -11px 0 0 white,
+                0 11px 0 0 white;
+        }
+
+        /* Coffee spills - right side */
+        .mascot::after {
+            content: '';
+            position: absolute;
+            bottom: 5px;
+            right: -35px;
+            width: 25px;
+            height: 30px;
+            background: radial-gradient(ellipse at top, rgba(139, 69, 19, 0.6), transparent 70%);
+            border-radius: 50%;
+            animation: spillDrip 0.8s ease-in-out infinite;
+        }
+
+        @keyframes spillDrip {
+            0%, 100% { opacity: 0.8; transform: translateY(0); }
+            50% { opacity: 0.4; transform: translateY(5px); }
+        }
+
+        /* Additional coffee drip */
+        .mascot::before {
+            content: '';
+            position: absolute;
+            bottom: 15px;
+            right: -28px;
+            width: 4px;
+            height: 15px;
+            background: linear-gradient(180deg, rgba(139, 69, 19, 0.8), rgba(139, 69, 19, 0.3));
+            border-radius: 50%;
+            animation: dripFall 0.6s ease-in-out infinite 0.3s;
+            z-index: 9;
+        }
+
+        @keyframes dripFall {
+            0% { opacity: 1; transform: translateY(0) scaleY(1); }
+            100% { opacity: 0; transform: translateY(20px) scaleY(1.5); }
+        }
+
+        .wave {
+            display: none;
+        }
+
+        /* Dancing Mascot - Elvis Style */
+        .mascot-dance {
+            position: relative;
+            width: 240px;
+            height: 320px;
+            margin: 60px auto;
+            animation: mascotGroove 0.6s ease-in-out infinite;
+        }
+
+        @keyframes mascotGroove {
+            0%, 100% { transform: translateX(-10px) rotate(-3deg); }
+            50% { transform: translateX(10px) rotate(3deg); }
+        }
+
+        .mascot-body-dance {
+            position: relative;
+            width: 140px;
+            height: 240px;
+            margin: 0 auto;
+        }
+
+        /* Head */
+        .mascot-face-dance {
+            width: 110px;
+            height: 95px;
+            background: var(--neon-yellow);
+            border-radius: 50% 50% 45% 45%;
+            position: relative;
+            margin: 0 auto;
+            box-shadow: 0 0 50px rgba(255, 255, 0, 0.8);
+            animation: headSwing 0.4s ease-in-out infinite;
+        }
+
+        @keyframes headSwing {
+            0%, 100% { transform: rotate(-10deg); }
+            50% { transform: rotate(10deg); }
+        }
+
+        /* Ears */
+        .mascot-face-dance::before,
+        .mascot-face-dance::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 0;
+            border-left: 22px solid transparent;
+            border-right: 22px solid transparent;
+            border-bottom: 40px solid var(--neon-yellow);
+            top: -30px;
+            filter: drop-shadow(0 0 20px var(--neon-yellow));
+        }
+
+        .mascot-face-dance::before {
+            left: 2px;
+            transform: rotate(-25deg);
+            animation: earFlap 0.4s ease-in-out infinite;
+        }
+
+        .mascot-face-dance::after {
+            right: 2px;
+            transform: rotate(25deg);
+            animation: earFlap 0.4s ease-in-out infinite 0.2s;
+        }
+
+        @keyframes earFlap {
+            0%, 100% { transform: rotate(25deg) scale(1); }
+            50% { transform: rotate(25deg) scale(1.15); }
+        }
+
+        /* Eyes */
+        .mascot-eyes-dance {
+            position: absolute;
+            top: 32%;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 30px;
+        }
+
+        .eye-dance {
+            width: 16px;
+            height: 22px;
+            background: var(--deep-black);
+            border-radius: 50%;
+            position: relative;
+            animation: eyeWink 1s ease-in-out infinite;
+        }
+
+        @keyframes eyeWink {
+            0%, 88%, 94%, 100% { transform: scaleY(1); }
+            90%, 92% { transform: scaleY(0.1); }
+        }
+
+        .eye-dance::after {
+            content: '';
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: var(--electric-pink);
+            border-radius: 50%;
+            top: 25%;
+            left: 50%;
+            transform: translateX(-50%);
+            box-shadow: 0 0 10px var(--electric-pink);
+        }
+
+        /* Mouth with tongue */
+        .mascot-mouth-dance {
+            position: absolute;
+            bottom: 30%;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .mascot-mouth-dance::before {
+            content: '';
+            position: absolute;
+            width: 10px;
+            height: 8px;
+            background: var(--electric-pink);
+            border-radius: 50%;
+            left: 50%;
+            transform: translateX(-50%);
+            box-shadow: 0 0 15px var(--electric-pink);
+        }
+
+        .mascot-mouth-dance::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 12px;
+            background: var(--electric-pink);
+            border-radius: 0 0 50% 50%;
+            top: 6px;
+            left: 50%;
+            transform: translateX(-50%);
+            box-shadow: 0 0 10px var(--electric-pink);
+            animation: tongueOut 0.4s ease-in-out infinite;
+        }
+
+        @keyframes tongueOut {
+            0%, 100% { transform: translateX(-50%) rotate(-8deg); }
+            50% { transform: translateX(-50%) rotate(8deg); }
+        }
+
+        /* Headphones */
+        .coffee-cup-dance {
+            position: absolute;
+            top: 32%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 150px;
+            height: 60px;
+            pointer-events: none;
+        }
+
+        .coffee-cup-dance::before,
+        .coffee-cup-dance::after {
+            content: '';
+            position: absolute;
+            width: 35px;
+            height: 35px;
+            background: var(--neon-cyan);
+            border: 5px solid var(--deep-black);
+            border-radius: 50%;
+            box-shadow: 0 0 30px var(--neon-cyan), inset 0 0 15px rgba(0, 255, 255, 0.5);
+            animation: phonePump 0.3s ease-in-out infinite;
+        }
+
+        .coffee-cup-dance::before { left: -10px; }
+        .coffee-cup-dance::after { 
+            right: -10px;
+            animation-delay: 0.15s;
+        }
+
+        @keyframes phonePump {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.15); box-shadow: 0 0 50px var(--neon-cyan); }
+        }
+
+        /* Body */
+        .body-dance {
+            width: 90px;
+            height: 70px;
+            background: var(--neon-yellow);
+            border-radius: 40% 40% 50% 50%;
+            margin: -10px auto 0;
+            box-shadow: 0 0 40px rgba(255, 255, 0, 0.5);
+            animation: bodySwivel 0.3s ease-in-out infinite;
+        }
+
+        @keyframes bodySwivel {
+            0%, 100% { transform: rotate(-5deg) translateX(-5px); }
+            50% { transform: rotate(5deg) translateX(5px); }
+        }
+
+        /* DISCO LEGS - Elvis Style */
+        .disco-legs {
+            position: relative;
+            width: 100px;
+            height: 100px;
+            margin: 0 auto;
+        }
+
+        .leg {
+            position: absolute;
+            width: 20px;
+            height: 80px;
+            background: var(--neon-yellow);
+            border-radius: 10px;
+            bottom: 0;
+            box-shadow: 0 0 20px rgba(255, 255, 0, 0.4);
+        }
+
+        .left-leg {
+            left: 20px;
+            transform-origin: top center;
+            animation: legKickLeft 0.3s ease-in-out infinite;
+        }
+
+        .right-leg {
+            right: 20px;
+            transform-origin: top center;
+            animation: legKickRight 0.3s ease-in-out infinite;
+        }
+
+        @keyframes legKickLeft {
+            0%, 100% { transform: rotate(-25deg) translateX(-8px); }
+            50% { transform: rotate(-5deg) translateX(-2px); }
+        }
+
+        @keyframes legKickRight {
+            0%, 100% { transform: rotate(25deg) translateX(8px); }
+            50% { transform: rotate(5deg) translateX(2px); }
+        }
+
+        /* Feet */
+        .leg::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 28px;
+            height: 15px;
+            background: var(--deep-black);
+            border-radius: 50% 50% 10px 10px;
+            box-shadow: 0 0 15px var(--neon-cyan);
+        }
+
+        /* Drinks in hands */
+        .energy-waves-dance {
+            position: absolute;
+            bottom: 80px;
+            left: -30px;
+            width: 35px;
+            height: 50px;
+            animation: drinkWave 0.3s ease-in-out infinite;
+        }
+
+        @keyframes drinkWave {
+            0%, 100% { transform: rotate(-30deg) translateY(0); }
+            50% { transform: rotate(-30deg) translateY(-8px); }
+        }
+
+        .energy-waves-dance::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 32px;
+            height: 48px;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.15) 0%, rgba(136, 204, 136, 0.4) 20%, rgba(76, 175, 80, 0.7) 100%);
+            border: 3px solid var(--neon-cyan);
+            border-radius: 3px 3px 8px 8px;
+            box-shadow: 0 0 20px rgba(76, 175, 80, 0.6), inset 0 0 15px rgba(76, 175, 80, 0.3);
+        }
+
+        /* Straw for dancing matcha */
+        .energy-waves-dance::after {
+            content: '';
+            position: absolute;
+            left: 5px;
+            bottom: 45px;
+            width: 3px;
+            height: 28px;
+            background: var(--neon-cyan);
+            transform: rotate(10deg);
+            box-shadow: 0 0 8px var(--neon-cyan);
+            z-index: 11;
+        }
+
+        .mascot-body-dance::after {
+            content: '';
+            position: absolute;
+            bottom: 80px;
+            right: -30px;
+            width: 32px;
+            height: 48px;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.15) 0%, rgba(101, 67, 33, 0.4) 20%, rgba(139, 69, 19, 0.7) 100%);
+            border: 3px solid var(--electric-pink);
+            border-radius: 3px 3px 8px 8px;
+            box-shadow: 0 0 20px var(--electric-pink), inset 0 0 15px rgba(139, 69, 19, 0.3);
+            animation: drinkWave 0.3s ease-in-out infinite 0.15s;
+        }
+
+        /* Straw for dancing coffee */
+        .mascot-body-dance::before {
+            content: '';
+            position: absolute;
+            bottom: 125px;
+            right: -23px;
+            width: 3px;
+            height: 28px;
+            background: var(--electric-pink);
+            transform: rotate(-10deg);
+            box-shadow: 0 0 8px var(--electric-pink);
+            z-index: 11;
+            animation: drinkWave 0.3s ease-in-out infinite 0.15s;
+        }
+
+        /* Coffee spills on dancing mascot */
+        .mascot-dance::after {
+            content: '';
+            position: absolute;
+            bottom: 75px;
+            right: -35px;
+            width: 25px;
+            height: 30px;
+            background: radial-gradient(ellipse at top, rgba(139, 69, 19, 0.6), transparent 70%);
+            border-radius: 50%;
+            animation: spillDrip 0.8s ease-in-out infinite;
+        }
+
+        /* Matcha spills on dancing mascot */
+        .mascot-dance::before {
+            content: '';
+            position: absolute;
+            bottom: 75px;
+            left: -35px;
+            width: 25px;
+            height: 30px;
+            background: radial-gradient(ellipse at top, rgba(76, 175, 80, 0.6), transparent 70%);
+            border-radius: 50%;
+            animation: spillDrip 0.8s ease-in-out infinite 0.4s;
+        }
+
+        /* Party Scene */
+        .party-scene {
+            position: relative;
+            width: 100%;
+            max-width: 900px;
+            height: 400px;
+            margin: 60px auto;
+            background: linear-gradient(180deg, rgba(255, 0, 255, 0.1) 0%, rgba(0, 255, 255, 0.1) 100%);
+            border: 3px solid var(--neon-yellow);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 0 40px rgba(255, 255, 0, 0.3);
+        }
+
+        /* Disco floor pattern */
+        .disco-floor {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100px;
+            background: 
+                linear-gradient(45deg, var(--electric-pink) 25%, transparent 25%),
+                linear-gradient(-45deg, var(--electric-pink) 25%, transparent 25%),
+                linear-gradient(45deg, transparent 75%, var(--neon-cyan) 75%),
+                linear-gradient(-45deg, transparent 75%, var(--neon-cyan) 75%);
+            background-size: 40px 40px;
+            background-position: 0 0, 0 20px, 20px -20px, -20px 0px;
+            opacity: 0.3;
+            animation: floorSlide 2s linear infinite;
+        }
+
+        @keyframes floorSlide {
+            0% { background-position: 0 0, 0 20px, 20px -20px, -20px 0px; }
+            100% { background-position: 40px 0, 40px 20px, 60px -20px, 20px 0px; }
+        }
+
+        /* Disco ball */
+        .disco-ball {
+            position: absolute;
+            top: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, 
+                var(--neon-cyan) 0%, 
+                var(--neon-yellow) 25%, 
+                var(--electric-pink) 50%, 
+                var(--neon-cyan) 75%, 
+                var(--neon-yellow) 100%);
+            border-radius: 50%;
+            box-shadow: 0 0 50px var(--neon-cyan), inset 0 0 30px rgba(255, 255, 255, 0.3);
+            animation: discoSpin 3s linear infinite;
+        }
+
+        @keyframes discoSpin {
+            0% { transform: translateX(-50%) rotate(0deg); }
+            100% { transform: translateX(-50%) rotate(360deg); }
+        }
+
+        .ball-shine {
+            position: absolute;
+            top: 15%;
+            left: 20%;
+            width: 30px;
+            height: 30px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.8), transparent);
+            border-radius: 50%;
+            animation: shineMove 2s ease-in-out infinite;
+        }
+
+        @keyframes shineMove {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(10px, -5px); }
+        }
+
+        /* Party characters */
+        .party-character {
+            position: absolute;
+            bottom: 100px;
+            width: 100px;
+            height: 150px;
+        }
+
+        .char-1 {
+            left: 10%;
+            animation: partyBounce 0.4s ease-in-out infinite;
+        }
+
+        .char-2 {
+            left: 30%;
+            animation: partyBounce 0.4s ease-in-out infinite 0.1s;
+        }
+
+        .char-3 {
+            right: 30%;
+            animation: partyBounce 0.4s ease-in-out infinite 0.2s;
+        }
+
+        .char-4 {
+            right: 10%;
+            animation: partyBounce 0.4s ease-in-out infinite 0.3s;
+        }
+
+        @keyframes partyBounce {
+            0%, 100% { transform: translateY(0) rotate(-5deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+        }
+
+        /* Character body */
+        .char-body {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        .char-head {
+            width: 60px;
+            height: 60px;
+            background: var(--neon-yellow);
+            border-radius: 50%;
+            margin: 0 auto;
+            box-shadow: 0 0 30px var(--neon-yellow);
+            position: relative;
+        }
+
+        /* Eyes */
+        .char-head::before,
+        .char-head::after {
+            content: '';
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: var(--deep-black);
+            border-radius: 50%;
+            top: 35%;
+        }
+
+        .char-head::before { left: 30%; }
+        .char-head::after { right: 30%; }
+
+        /* Coffee mug */
+        .coffee-mug {
+            position: absolute;
+            top: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 2.5rem;
+            filter: drop-shadow(0 0 15px var(--electric-pink));
+            animation: mugRaise 0.4s ease-in-out infinite;
+        }
+
+        @keyframes mugRaise {
+            0%, 100% { transform: translateX(-50%) translateY(0) rotate(-10deg); }
+            50% { transform: translateX(-50%) translateY(-15px) rotate(10deg); }
+        }
+
+        /* Character arms */
+        .party-arms {
+            position: absolute;
+            top: 55px;
+            width: 100%;
+        }
+
+        .arm {
+            position: absolute;
+            width: 30px;
+            height: 6px;
+            background: var(--neon-yellow);
+            border-radius: 3px;
+            top: 0;
+        }
+
+        .left-arm {
+            left: 0;
+            transform-origin: right center;
+            animation: armWave 0.4s ease-in-out infinite;
+        }
+
+        .right-arm {
+            right: 0;
+            transform-origin: left center;
+            animation: armWave 0.4s ease-in-out infinite 0.2s;
+        }
+
+        @keyframes armWave {
+            0%, 100% { transform: rotate(-30deg); }
+            50% { transform: rotate(30deg); }
+        }
+
+        /* Disco lights on characters */
+        .disco-lights {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: radial-gradient(circle, 
+                rgba(255, 0, 255, 0.3), 
+                rgba(0, 255, 255, 0.3), 
+                transparent);
+            animation: lightPulse 0.8s ease-in-out infinite;
+        }
+
+        @keyframes lightPulse {
+            0%, 100% { opacity: 0.3; transform: translateX(-50%) scale(1); }
+            50% { opacity: 0.7; transform: translateX(-50%) scale(1.2); }
+        }
+
+        /* Char 1 - yellow */
+        .char-1 .char-head { background: var(--neon-yellow); box-shadow: 0 0 30px var(--neon-yellow); }
+        .char-1 .arm { background: var(--neon-yellow); }
+
+        /* Char 2 - cyan */
+        .char-2 .char-head { background: var(--neon-cyan); box-shadow: 0 0 30px var(--neon-cyan); }
+        .char-2 .arm { background: var(--neon-cyan); }
+
+        /* Char 3 - pink */
+        .char-3 .char-head { background: var(--electric-pink); box-shadow: 0 0 30px var(--electric-pink); }
+        .char-3 .arm { background: var(--electric-pink); }
+
+        /* Char 4 - yellow */
+        .char-4 .char-head { background: var(--neon-yellow); box-shadow: 0 0 30px var(--neon-yellow); }
+        .char-4 .arm { background: var(--neon-yellow); }
+
+        /* Party text */
+        .party-text {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'Antonio', sans-serif;
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
+            font-weight: 700;
+            color: var(--neon-yellow);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            text-shadow: 0 0 20px var(--neon-yellow);
+            animation: textGlow 1s ease-in-out infinite;
+            z-index: 10;
+        }
+
+        @keyframes textGlow {
+            0%, 100% { text-shadow: 0 0 20px var(--neon-yellow); }
+            50% { text-shadow: 0 0 40px var(--neon-yellow), 0 0 60px var(--electric-pink); }
+        }
+
+        /* Instagram-style Participants Panel */
+        .participants-section {
+            margin: 80px 0;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .participants-title {
+            font-family: 'Antonio', sans-serif;
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 30px;
+            color: var(--neon-cyan);
+            text-align: center;
+            text-shadow: 0 0 20px var(--neon-cyan);
+        }
+
+        .participants-scroll {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+            padding: 20px 0;
+            -webkit-mask-image: linear-gradient(90deg, transparent, black 10%, black 90%, transparent);
+            mask-image: linear-gradient(90deg, transparent, black 10%, black 90%, transparent);
+        }
+
+        .participants-track {
+            display: flex;
+            gap: 20px;
+            animation: scrollParticipants 30s linear infinite;
+            width: fit-content;
+        }
+
+        @keyframes scrollParticipants {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        .participant {
+            flex-shrink: 0;
+            width: 200px;
+        }
+
+        .participant-card {
+            background: rgba(255, 255, 0, 0.05);
+            border: 2px solid var(--neon-yellow);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+            animation: cardFloat 3s ease-in-out infinite;
+        }
+
+        .participant-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--neon-cyan);
+            box-shadow: 0 10px 40px rgba(0, 255, 255, 0.4);
+        }
+
+        @keyframes cardFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        .animal-avatar {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 15px;
+            animation: avatarBounce 0.5s ease-in-out infinite;
+        }
+
+        @keyframes avatarBounce {
+            0%, 100% { transform: scale(1) rotate(-2deg); }
+            50% { transform: scale(1.05) rotate(2deg); }
+        }
+
+        .animal-face {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            position: relative;
+            box-shadow: 0 0 30px currentColor;
+        }
+
+        /* Cat */
+        .cat-avatar .animal-face { background: var(--neon-yellow); }
+        .cat-avatar .ear {
+            position: absolute;
+            width: 0;
+            height: 0;
+            border-left: 15px solid transparent;
+            border-right: 15px solid transparent;
+            border-bottom: 25px solid var(--neon-yellow);
+            top: -15px;
+        }
+        .cat-avatar .ear:first-child { left: 15px; }
+        .cat-avatar .ear:last-child { right: 15px; }
+
+        /* Dog */
+        .dog-avatar .animal-face { background: var(--neon-cyan); }
+        .dog-avatar .dog-ear {
+            position: absolute;
+            width: 25px;
+            height: 40px;
+            background: var(--neon-cyan);
+            border-radius: 50% 50% 0 0;
+            top: 10px;
+        }
+        .dog-avatar .dog-ear:first-child { left: -10px; transform: rotate(-20deg); }
+        .dog-avatar .dog-ear:last-child { right: -10px; transform: rotate(20deg); }
+        .dog-avatar .tongue {
+            position: absolute;
+            width: 15px;
+            height: 10px;
+            background: var(--electric-pink);
+            border-radius: 0 0 50% 50%;
+            bottom: 25%;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: tongueWag 0.4s ease-in-out infinite;
+        }
+
+        /* Bear */
+        .bear-avatar .animal-face { background: #8B4513; box-shadow: 0 0 30px rgba(139, 69, 19, 0.8); }
+        .bear-avatar .bear-ear {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background: #8B4513;
+            border-radius: 50%;
+            top: 5px;
+        }
+        .bear-avatar .bear-ear:first-child { left: 5px; }
+        .bear-avatar .bear-ear:last-child { right: 5px; }
+
+        /* Rabbit */
+        .rabbit-avatar .animal-face { background: var(--electric-pink); }
+        .rabbit-avatar .rabbit-ear {
+            position: absolute;
+            width: 15px;
+            height: 50px;
+            background: var(--electric-pink);
+            border-radius: 50% 50% 20% 20%;
+            top: -35px;
+        }
+        .rabbit-avatar .rabbit-ear:first-child { left: 25px; }
+        .rabbit-avatar .rabbit-ear:last-child { right: 25px; }
+
+        /* Fox */
+        .fox-avatar .animal-face { background: #FF6B35; box-shadow: 0 0 30px rgba(255, 107, 53, 0.8); }
+        .fox-avatar .fox-ear {
+            position: absolute;
+            width: 0;
+            height: 0;
+            border-left: 18px solid transparent;
+            border-right: 18px solid transparent;
+            border-bottom: 30px solid #FF6B35;
+            top: -18px;
+        }
+        .fox-avatar .fox-ear:first-child { left: 10px; }
+        .fox-avatar .fox-ear:last-child { right: 10px; }
+
+        /* Panda */
+        .panda-avatar .animal-face { background: white; box-shadow: 0 0 30px rgba(255, 255, 255, 0.6); }
+        .panda-avatar .panda-patch {
+            position: absolute;
+            width: 30px;
+            height: 35px;
+            background: var(--deep-black);
+            border-radius: 50%;
+            top: 30%;
+        }
+        .panda-avatar .panda-patch:first-child { left: 10%; }
+        .panda-avatar .panda-patch:nth-child(2) { right: 10%; }
+
+        /* Animal eyes */
+        .animal-eyes {
+            position: absolute;
+            top: 40%;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 20px;
+        }
+
+        .panda-eyes {
+            position: absolute;
+            top: 40%;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 20px;
+            width: 100%;
+            justify-content: center;
+        }
+
+        .panda-eyes .eye {
+            position: relative;
+            z-index: 2;
+        }
+
+        .eye {
+            width: 10px;
+            height: 10px;
+            background: var(--deep-black);
+            border-radius: 50%;
+            animation: eyeBlink 3s ease-in-out infinite;
+        }
+
+        /* Animal nose */
+        .animal-nose {
+            position: absolute;
+            width: 12px;
+            height: 10px;
+            background: var(--deep-black);
+            border-radius: 50% 50% 50% 50%;
+            bottom: 35%;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        /* Thumbs up / Heart */
+        .thumbs-up {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            font-size: 2rem;
+            animation: reactionPulse 1s ease-in-out infinite;
+            filter: drop-shadow(0 0 10px var(--neon-yellow));
+        }
+
+        @keyframes reactionPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+
+        /* Drink icon */
+        .drink-icon {
+            position: absolute;
+            bottom: -10px;
+            left: -10px;
+            font-size: 1.8rem;
+            animation: drinkBob 0.6s ease-in-out infinite;
+            filter: drop-shadow(0 0 8px var(--electric-pink));
+        }
+
+        @keyframes drinkBob {
+            0%, 100% { transform: translateY(0) rotate(-5deg); }
+            50% { transform: translateY(-5px) rotate(5deg); }
+        }
+
+        /* Participant info */
+        .participant-name {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--neon-cyan);
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .participant-vibe {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.7);
+            font-style: italic;
+        }
+
+        /* Coffee & Matcha Menu */
+        .menu-section {
+            margin: 100px auto;
+            max-width: 1000px;
+            padding: 0 20px;
+        }
+
+        .menu-subtitle {
+            text-align: center;
+            font-size: clamp(1rem, 2vw, 1.2rem);
+            color: var(--electric-pink);
+            margin-top: -20px;
+            margin-bottom: 20px;
+            letter-spacing: 0.2em;
+            text-transform: lowercase;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .menu-donation-note {
+            text-align: center;
+            font-size: clamp(1rem, 2.5vw, 1.3rem);
+            color: var(--neon-yellow);
+            margin-bottom: 50px;
+            padding: 20px;
+            background: rgba(255, 255, 0, 0.08);
+            border: 2px solid var(--neon-yellow);
+            border-radius: 10px;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            animation: borderGlow 2s ease-in-out infinite;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .menu-unified {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .menu-column-unified {
+            background: rgba(0, 0, 0, 0.5);
+            border: 2px solid var(--neon-yellow);
+            border-radius: 10px;
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .menu-column-unified::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 0, 0.03), transparent);
+            animation: menuShine 3s infinite;
+        }
+
+        .menu-items-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 10px;
+            margin-bottom: 40px;
+        }
+
+        /* Customization Section */
+        .menu-customization {
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 2px solid var(--neon-cyan);
+        }
+
+        .custom-section {
+            margin-bottom: 30px;
+        }
+
+        .custom-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .custom-title {
+            font-family: 'Antonio', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--neon-cyan);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 15px;
+            text-shadow: 0 0 15px var(--neon-cyan);
+        }
+
+        .custom-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .custom-option {
+            padding: 12px 25px;
+            background: rgba(0, 255, 255, 0.05);
+            border: 2px solid var(--neon-cyan);
+            border-radius: 25px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--neon-cyan);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .custom-option:hover {
+            background: rgba(0, 255, 255, 0.15);
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .menu-column {
+            background: rgba(0, 0, 0, 0.5);
+            border: 2px solid var(--neon-yellow);
+            border-radius: 10px;
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .menu-column::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 0, 0.03), transparent);
+            animation: menuShine 3s infinite;
+        }
+
+        @keyframes menuShine {
+            0% { transform: translate(-100%, -100%) rotate(45deg); }
+            100% { transform: translate(100%, 100%) rotate(45deg); }
+        }
+
+        .menu-header {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid var(--neon-cyan);
+        }
+
+        .menu-category {
+            font-family: 'Antonio', sans-serif;
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--neon-cyan);
+            text-shadow: 0 0 20px var(--neon-cyan);
+        }
+
+        .menu-item {
+            margin-bottom: 25px;
+            padding: 20px;
+            background: rgba(255, 255, 0, 0.02);
+            border-left: 3px solid transparent;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .menu-item:hover {
+            background: rgba(255, 255, 0, 0.08);
+            border-left-color: var(--neon-cyan);
+            transform: translateX(5px);
+        }
+
+        .menu-item.featured {
+            border-left-color: var(--electric-pink);
+            background: rgba(255, 0, 255, 0.05);
+            animation: featuredGlow 2s ease-in-out infinite;
+        }
+
+        @keyframes featuredGlow {
+            0%, 100% { box-shadow: 0 0 10px rgba(255, 0, 255, 0.2); }
+            50% { box-shadow: 0 0 30px rgba(255, 0, 255, 0.4); }
+        }
+
+        .item-badge {
+            position: absolute;
+            top: -10px;
+            right: 10px;
+            background: var(--electric-pink);
+            color: var(--deep-black);
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 5px 12px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            box-shadow: 0 0 15px var(--electric-pink);
+            animation: badgePulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes badgePulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .item-name {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--neon-yellow);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 8px;
+        }
+
+        .item-desc {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.6);
+            line-height: 1.5;
+            margin-top: 8px;
+            font-style: italic;
+        }
+
+        /* Mobile adjustments for menu */
+        @media (max-width: 900px) {
+            .menu-items-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .glitch {
+            font-family: 'Antonio', sans-serif;
+            font-size: clamp(3rem, 12vw, 8rem);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: -0.05em;
+            line-height: 0.9;
+            margin-bottom: 20px;
+            position: relative;
+            animation: glitchAnim 8s infinite;
+        }
+
+        @keyframes glitchAnim {
+            0%, 90%, 100% { transform: translate(0, 0); }
+            91% { transform: translate(-2px, -2px); }
+            92% { transform: translate(2px, 2px); }
+            93% { transform: translate(-1px, 1px); }
+        }
+
+        .glitch::before,
+        .glitch::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+        }
+
+        .glitch::before {
+            color: var(--neon-cyan);
+            animation: glitchBefore 3s infinite;
+        }
+
+        .glitch::after {
+            color: var(--electric-pink);
+            animation: glitchAfter 3s infinite;
+        }
+
+        @keyframes glitchBefore {
+            0%, 96%, 100% { opacity: 0; }
+            97% { opacity: 0.7; transform: translate(-2px, -2px); }
+            98% { opacity: 0; }
+        }
+
+        @keyframes glitchAfter {
+            0%, 94%, 100% { opacity: 0; }
+            95% { opacity: 0.7; transform: translate(2px, 2px); }
+            96% { opacity: 0; }
+        }
+
+        .subtitle {
+            font-size: clamp(1rem, 3vw, 1.4rem);
+            color: var(--neon-cyan);
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            margin-bottom: 40px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
+        /* Event Details */
+        .event-details {
+            display: flex;
+            justify-content: center;
+            align-items: stretch;
+            gap: 30px;
+            margin: 40px auto 60px;
+            max-width: 900px;
+            flex-wrap: wrap;
+        }
+
+        .detail-item {
+            flex: 1;
+            min-width: 200px;
+            background: rgba(0, 0, 0, 0.6);
+            border: 3px solid var(--neon-yellow);
+            border-radius: 10px;
+            padding: 25px 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            animation: detailPulse 3s ease-in-out infinite;
+        }
+
+        .detail-item:nth-child(1) { animation-delay: 0s; border-color: var(--neon-yellow); }
+        .detail-item:nth-child(2) { animation-delay: 0.3s; border-color: var(--neon-cyan); }
+        .detail-item:nth-child(3) { animation-delay: 0.6s; border-color: var(--electric-pink); }
+
+        @keyframes detailPulse {
+            0%, 100% { box-shadow: 0 0 20px currentColor; transform: scale(1); }
+            50% { box-shadow: 0 0 40px currentColor; transform: scale(1.02); }
+        }
+
+        .detail-item::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.05), transparent);
+            animation: detailShine 3s infinite;
+            animation-delay: inherit;
+        }
+
+        @keyframes detailShine {
+            0% { transform: translate(-100%, -100%) rotate(45deg); }
+            100% { transform: translate(100%, 100%) rotate(45deg); }
+        }
+
+        .detail-icon {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            animation: iconBounce 1s ease-in-out infinite;
+        }
+
+        @keyframes iconBounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
+        .detail-label {
+            font-size: 0.9rem;
+            font-weight: 700;
+            letter-spacing: 0.2em;
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        .detail-value {
+            font-family: 'Antonio', sans-serif;
+            font-size: clamp(1.5rem, 3vw, 2rem);
+            font-weight: 700;
+            color: var(--neon-yellow);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            text-shadow: 0 0 20px currentColor;
+        }
+
+        .detail-item:nth-child(2) .detail-value {
+            color: var(--neon-cyan);
+        }
+
+        .detail-item:nth-child(3) .detail-value {
+            color: var(--electric-pink);
+        }
+
+        @media (max-width: 768px) {
+            .event-details {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .detail-item {
+                min-width: 100%;
+            }
+        }
+
+        .manifesto {
+            max-width: 800px;
+            margin: 0 auto 60px;
+            font-size: clamp(1rem, 2vw, 1.2rem);
+            line-height: 1.8;
+            text-align: left;
+            padding: 40px;
+            background: rgba(255, 255, 0, 0.05);
+            border: 2px solid var(--neon-yellow);
+            border-radius: 0;
+            position: relative;
+            animation: borderGlow 2s ease-in-out infinite;
+        }
+
+        @keyframes borderGlow {
+            0%, 100% { box-shadow: 0 0 20px rgba(255, 255, 0, 0.3); }
+            50% { box-shadow: 0 0 40px rgba(255, 255, 0, 0.6); }
+        }
+
+        .manifesto p {
+            margin-bottom: 20px;
+        }
+
+        .manifesto p:last-child {
+            margin-bottom: 0;
+        }
+
+        .highlight {
+            color: var(--neon-cyan);
+            font-weight: 700;
+        }
+
+        /* What to expect section */
+        .section {
+            margin: 80px 0;
+        }
+
+        .section-title {
+            font-family: 'Antonio', sans-serif;
+            font-size: clamp(2rem, 6vw, 4rem);
+            text-transform: uppercase;
+            letter-spacing: -0.02em;
+            margin-bottom: 40px;
+            color: var(--neon-yellow);
+            text-align: center;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 100px;
+            height: 4px;
+            background: var(--neon-cyan);
+            margin: 20px auto 0;
+            animation: expandContract 2s ease-in-out infinite;
+        }
+
+        @keyframes expandContract {
+            0%, 100% { width: 100px; }
+            50% { width: 200px; }
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .card {
+            background: var(--dark-gray);
+            padding: 30px;
+            border: 2px solid var(--neon-yellow);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: -100%;
+            left: -100%;
+            width: 300%;
+            height: 300%;
+            background: linear-gradient(45deg, transparent, rgba(0, 255, 255, 0.1), transparent);
+            animation: cardShine 3s infinite;
+            animation-delay: var(--delay);
+        }
+
+        @keyframes cardShine {
+            0% { transform: translate(-100%, -100%) rotate(45deg); }
+            100% { transform: translate(100%, 100%) rotate(45deg); }
+        }
+
+        .card:nth-child(1) { --delay: 0s; }
+        .card:nth-child(2) { --delay: 0.3s; }
+        .card:nth-child(3) { --delay: 0.6s; }
+        .card:nth-child(4) { --delay: 0.9s; }
+        .card:nth-child(5) { --delay: 1.2s; }
+
+        .card:hover {
+            border-color: var(--neon-cyan);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 40px rgba(0, 255, 255, 0.3);
+        }
+
+        .card-icon {
+            font-size: 2rem;
+            margin-bottom: 15px;
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--neon-cyan);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .card-text {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        /* Bring list */
+        .bring-list {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .bring-item {
+            padding: 20px 0;
+            border-bottom: 1px solid rgba(255, 255, 0, 0.2);
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            animation: slideIn 0.6s ease-out;
+            animation-fill-mode: both;
+        }
+
+        .bring-item:nth-child(1) { animation-delay: 0.1s; }
+        .bring-item:nth-child(2) { animation-delay: 0.2s; }
+        .bring-item:nth-child(3) { animation-delay: 0.3s; }
+        .bring-item:nth-child(4) { animation-delay: 0.4s; }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .bring-icon {
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        /* Warning section */
+        .warning {
+            max-width: 800px;
+            margin: 80px auto;
+            padding: 40px;
+            background: rgba(255, 0, 255, 0.1);
+            border: 3px solid var(--electric-pink);
+            position: relative;
+            text-align: center;
+        }
+
+        .warning::before {
+            content: '⚠️';
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 3rem;
+            background: var(--deep-black);
+            padding: 0 20px;
+            animation: warningBounce 1s ease-in-out infinite;
+        }
+
+        @keyframes warningBounce {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(-10px); }
+        }
+
+        .warning-text {
+            font-family: 'Antonio', sans-serif;
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
+            color: var(--electric-pink);
+            text-transform: uppercase;
+            letter-spacing: 0.02em;
+            line-height: 1.4;
+        }
+
+        /* CTA Section */
+        .cta {
+            text-align: center;
+            margin: 80px 0;
+        }
+
+        .cta-button {
+            display: inline-block;
+            font-family: 'Antonio', sans-serif;
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 25px 60px;
+            background: var(--neon-yellow);
+            color: var(--deep-black);
+            border: none;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: var(--neon-cyan);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s ease, height 0.6s ease;
+        }
+
+        .cta-button:hover::before {
+            width: 400px;
+            height: 400px;
+        }
+
+        .cta-button:hover {
+            color: var(--deep-black);
+            box-shadow: 0 0 40px var(--neon-yellow);
+        }
+
+        .cta-button span {
+            position: relative;
+            z-index: 1;
+        }
+
+        .cta-subtext {
+            margin-top: 20px;
+            font-size: 1rem;
+            color: var(--neon-cyan);
+            letter-spacing: 0.1em;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 60px 20px 40px;
+            border-top: 1px solid rgba(255, 255, 0, 0.2);
+            margin-top: 100px;
+        }
+
+        .footer-text {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.6);
+            letter-spacing: 0.1em;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .manifesto {
+                padding: 30px 20px;
+            }
+
+            .card {
+                padding: 25px;
+            }
+
+            .warning {
+                padding: 30px 20px;
+            }
+
+            .cta-button {
+                padding: 20px 40px;
+            }
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--deep-black);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--neon-yellow);
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--neon-cyan);
+        }
+    </style>
+</head>
+<body>
+    <!-- Hamburger Menu -->
+    <div class="hamburger-menu" id="hamburgerMenu">
+        <div class="hamburger-icon">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </div>
+
+    <nav class="side-menu" id="sideMenu">
+        <div class="menu-close" id="menuClose">✕</div>
+        <ul class="menu-list">
+            <li><a href="#home">HOME</a></li>
+            <li><a href="#details">DETAILS</a></li>
+            <li><a href="#vibes">VIBES</a></li>
+            <li><a href="#menu">MENU</a></li>
+            <li><a href="#participants">WHO'S COMING</a></li>
+            <li><a href="#bring">WHAT TO BRING</a></li>
+            <li><a href="#contact">RSVP</a></li>
+        </ul>
+    </nav>
+
+    <div class="gym-bg"></div>
+    <div class="gym-equipment-1"></div>
+    <div class="gym-equipment-2"></div>
+    <div class="gym-equipment-3"></div>
+    <div class="gym-equipment-4"></div>
+    <div class="bg-grid"></div>
+    <div class="scanline"></div>
+    
+    <!-- Audio player for psytrance -->
+    <audio id="psytranceAudio" loop>
+        <!-- Liquid Soul - Crazy People -->
+        <source src="Liquid_Soul__-_Crazy_People_-_Liquid_Soul_Official.mp3" type="audio/mpeg">
+    </audio>
+    
+    <!-- Audio control button -->
+    <button id="audioToggle" style="position: fixed; bottom: 20px; right: 20px; z-index: 1000; padding: 15px 25px; background: var(--neon-cyan); color: var(--deep-black); border: 3px solid var(--neon-yellow); font-family: 'Antonio', sans-serif; font-size: 1rem; font-weight: 700; cursor: pointer; text-transform: uppercase; box-shadow: 0 0 20px var(--neon-cyan); animation: pulse 2s ease-in-out infinite; border-radius: 5px;">
+        🔊 PLAY MUSIC
+    </button>
+
+    <script>
+        const audio = document.getElementById('psytranceAudio');
+        const toggleBtn = document.getElementById('audioToggle');
+        let isPlaying = false;
+
+        // Set volume
+        audio.volume = 0.4;
+
+        toggleBtn.addEventListener('click', async () => {
+            if (isPlaying) {
+                audio.pause();
+                toggleBtn.textContent = '🔊 PLAY MUSIC';
+                toggleBtn.style.background = 'var(--neon-cyan)';
+                isPlaying = false;
+            } else {
+                try {
+                    await audio.play();
+                    toggleBtn.textContent = '🔇 PAUSE MUSIC';
+                    toggleBtn.style.background = 'var(--electric-pink)';
+                    isPlaying = true;
+                    console.log('Audio playing');
+                } catch (e) {
+                    console.log('Audio play failed:', e);
+                    toggleBtn.textContent = '⚠️ CLICK AGAIN';
+                    isPlaying = false;
+                }
+            }
+        });
+
+        // Error handling
+        audio.addEventListener('error', (e) => {
+            console.error('Audio error:', e);
+            toggleBtn.textContent = '⚠️ AUDIO ERROR';
+            isPlaying = false;
+        });
+
+        // Update state when audio actually starts playing
+        audio.addEventListener('play', () => {
+            console.log('Audio started successfully');
+            isPlaying = true;
+            toggleBtn.textContent = '🔇 PAUSE MUSIC';
+            toggleBtn.style.background = 'var(--electric-pink)';
+        });
+
+        // Update state when audio is paused
+        audio.addEventListener('pause', () => {
+            console.log('Audio paused');
+            if (isPlaying) {
+                isPlaying = false;
+                toggleBtn.textContent = '🔊 PLAY MUSIC';
+                toggleBtn.style.background = 'var(--neon-cyan)';
+            }
+        });
+
+        // Hamburger menu functionality
+        const hamburgerMenu = document.getElementById('hamburgerMenu');
+        const sideMenu = document.getElementById('sideMenu');
+        const menuClose = document.getElementById('menuClose');
+        
+        // Create overlay
+        const overlay = document.createElement('div');
+        overlay.className = 'menu-overlay';
+        document.body.appendChild(overlay);
+
+        // Open menu
+        hamburgerMenu.addEventListener('click', () => {
+            sideMenu.classList.add('active');
+            overlay.classList.add('active');
+        });
+
+        // Close menu
+        menuClose.addEventListener('click', () => {
+            sideMenu.classList.remove('active');
+            overlay.classList.remove('active');
+        });
+
+        // Close menu when clicking overlay
+        overlay.addEventListener('click', () => {
+            sideMenu.classList.remove('active');
+            overlay.classList.remove('active');
+        });
+
+        // Close menu when clicking a link
+        document.querySelectorAll('.menu-list a').forEach(link => {
+            link.addEventListener('click', () => {
+                sideMenu.classList.remove('active');
+                overlay.classList.remove('active');
+            });
+        });
+    </script>
+    
+    <div class="container">
+        <!-- Hero -->
+        <div class="hero" id="home">
+            <div class="mascot">
+                <div class="mascot-body">
+                    <div class="mascot-face">
+                        <div class="mascot-eyes">
+                            <div class="eye left"></div>
+                            <div class="eye right"></div>
+                        </div>
+                        <div class="mascot-mouth"></div>
+                    </div>
+                    <div class="coffee-cup"></div>
+                    <div></div>
+                    <div class="energy-waves"></div>
+                </div>
+            </div>
+            <h1 class="glitch" data-text="ESPRESSO RAVE">ESPRESSO RAVE</h1>
+            <p class="subtitle">POST-COMBINE MORNING CHAOS</p>
+            
+            <!-- Event Details -->
+            <div class="event-details" id="details">
+                <div class="detail-item">
+                    <div class="detail-icon">📍</div>
+                    <div class="detail-label">LOCATION</div>
+                    <div class="detail-value">NS GYM</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-icon">🕐</div>
+                    <div class="detail-label">TIME</div>
+                    <div class="detail-value">1PM - 3PM</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-icon">⚡</div>
+                    <div class="detail-label">VIBE</div>
+                    <div class="detail-value">MAXIMUM</div>
+                </div>
+            </div>
+            
+            <div class="manifesto">
+                <p>we're not cooling down after combine.</p>
+                <p>we're going <span class="highlight">harder</span>.</p>
+                <p>right after the combine session, the ns gym turns into a full on morning rave. lights up. music loud. bodies already warm.</p>
+                <p>🌀 <span class="highlight">dj blurry</span> drops raw techno and psytrance. fast. hypnotic. no fillers. no chill. just straight momentum.</p>
+                <p>☕️ <span class="highlight">christina</span> is on coffee duty serving liquid energy so the floor stays alive.</p>
+                <p>no alcohol. no night. no excuses.</p>
+                <p><span class="highlight">just bass, sweat, and caffeine.</span></p>
+                <p>this is what mornings are for.</p>
+            </div>
+        </div>
+
+        <!-- What to Expect -->
+        <section class="section" id="vibes">
+            <h2 class="section-title">What to Expect</h2>
+            
+            <!-- Dancing Mascot -->
+            <div class="mascot-dance">
+                <div class="mascot-body-dance">
+                    <div class="mascot-face-dance">
+                        <div class="mascot-eyes-dance">
+                            <div class="eye-dance left"></div>
+                            <div class="eye-dance right"></div>
+                        </div>
+                        <div class="mascot-mouth-dance"></div>
+                    </div>
+                    <div class="coffee-cup-dance"></div>
+                    <div class="body-dance"></div>
+                    <div class="disco-legs">
+                        <div class="leg left-leg"></div>
+                        <div class="leg right-leg"></div>
+                    </div>
+                    <div class="energy-waves-dance"></div>
+                </div>
+            </div>
+
+            <!-- Party Scene with Coffee -->
+            <div class="party-scene">
+                <div class="disco-floor"></div>
+                
+                <div class="party-character char-1">
+                    <div class="char-body">
+                        <div class="char-head"></div>
+                        <div class="coffee-mug">☕</div>
+                        <div class="party-arms">
+                            <div class="arm left-arm"></div>
+                            <div class="arm right-arm"></div>
+                        </div>
+                    </div>
+                    <div class="disco-lights"></div>
+                </div>
+
+                <div class="party-character char-2">
+                    <div class="char-body">
+                        <div class="char-head"></div>
+                        <div class="coffee-mug">☕</div>
+                        <div class="party-arms">
+                            <div class="arm left-arm"></div>
+                            <div class="arm right-arm"></div>
+                        </div>
+                    </div>
+                    <div class="disco-lights"></div>
+                </div>
+
+                <div class="party-character char-3">
+                    <div class="char-body">
+                        <div class="char-head"></div>
+                        <div class="coffee-mug">☕</div>
+                        <div class="party-arms">
+                            <div class="arm left-arm"></div>
+                            <div class="arm right-arm"></div>
+                        </div>
+                    </div>
+                    <div class="disco-lights"></div>
+                </div>
+
+                <div class="party-character char-4">
+                    <div class="char-body">
+                        <div class="char-head"></div>
+                        <div class="coffee-mug">☕</div>
+                        <div class="party-arms">
+                            <div class="arm left-arm"></div>
+                            <div class="arm right-arm"></div>
+                        </div>
+                    </div>
+                    <div class="disco-lights"></div>
+                </div>
+
+                <!-- Disco ball -->
+                <div class="disco-ball">
+                    <div class="ball-shine"></div>
+                </div>
+
+                <!-- Party text -->
+                <div class="party-text">COFFEE PARTY ZONE</div>
+            </div>
+
+            <!-- Instagram-style scrolling participants -->
+            <div class="participants-section" id="participants">
+                <h3 class="participants-title">WHO'S RAVING ❤️</h3>
+                <div class="participants-scroll">
+                    <div class="participants-track">
+                        <!-- Participant 1 - Cat -->
+                        <div class="participant">
+                            <div class="participant-card">
+                                <div class="animal-avatar cat-avatar">
+                                    <div class="animal-face">
+                                        <div class="animal-ears">
+                                            <div class="ear"></div>
+                                            <div class="ear"></div>
+                                        </div>
+                                        <div class="animal-eyes">
+                                            <div class="eye"></div>
+                                            <div class="eye"></div>
+                                        </div>
+                                        <div class="animal-nose"></div>
+                                    </div>
+                                    <div class="thumbs-up">👍</div>
+                                    <div class="drink-icon">☕</div>
+                                </div>
+                                <div class="participant-name">DJ Whiskers</div>
+                                <div class="participant-vibe">vibing hard</div>
+                            </div>
+                        </div>
+
+                        <!-- Participant 2 - Dog -->
+                        <div class="participant">
+                            <div class="participant-card">
+                                <div class="animal-avatar dog-avatar">
+                                    <div class="animal-face">
+                                        <div class="dog-ears">
+                                            <div class="dog-ear"></div>
+                                            <div class="dog-ear"></div>
+                                        </div>
+                                        <div class="animal-eyes">
+                                            <div class="eye"></div>
+                                            <div class="eye"></div>
+                                        </div>
+                                        <div class="animal-nose"></div>
+                                        <div class="tongue"></div>
+                                    </div>
+                                    <div class="thumbs-up">❤️</div>
+                                    <div class="drink-icon">🍵</div>
+                                </div>
+                                <div class="participant-name">Bounce Buddy</div>
+                                <div class="participant-vibe">maximum energy</div>
+                            </div>
+                        </div>
+
+                        <!-- Participant 3 - Bear -->
+                        <div class="participant">
+                            <div class="participant-card">
+                                <div class="animal-avatar bear-avatar">
+                                    <div class="animal-face">
+                                        <div class="bear-ears">
+                                            <div class="bear-ear"></div>
+                                            <div class="bear-ear"></div>
+                                        </div>
+                                        <div class="animal-eyes">
+                                            <div class="eye"></div>
+                                            <div class="eye"></div>
+                                        </div>
+                                        <div class="animal-nose"></div>
+                                    </div>
+                                    <div class="thumbs-up">👍</div>
+                                    <div class="drink-icon">☕</div>
+                                </div>
+                                <div class="participant-name">Bass Bear</div>
+                                <div class="participant-vibe">feeling it</div>
+                            </div>
+                        </div>
+
+                        <!-- Participant 4 - Rabbit -->
+                        <div class="participant">
+                            <div class="participant-card">
+                                <div class="animal-avatar rabbit-avatar">
+                                    <div class="animal-face">
+                                        <div class="rabbit-ears">
+                                            <div class="rabbit-ear"></div>
+                                            <div class="rabbit-ear"></div>
+                                        </div>
+                                        <div class="animal-eyes">
+                                            <div class="eye"></div>
+                                            <div class="eye"></div>
+                                        </div>
+                                        <div class="animal-nose"></div>
+                                    </div>
+                                    <div class="thumbs-up">❤️</div>
+                                    <div class="drink-icon">🍵</div>
+                                </div>
+                                <div class="participant-name">Hop Master</div>
+                                <div class="participant-vibe">can't stop</div>
+                            </div>
+                        </div>
+
+                        <!-- Participant 5 - Fox -->
+                        <div class="participant">
+                            <div class="participant-card">
+                                <div class="animal-avatar fox-avatar">
+                                    <div class="animal-face">
+                                        <div class="fox-ears">
+                                            <div class="fox-ear"></div>
+                                            <div class="fox-ear"></div>
+                                        </div>
+                                        <div class="animal-eyes">
+                                            <div class="eye"></div>
+                                            <div class="eye"></div>
+                                        </div>
+                                        <div class="animal-nose"></div>
+                                    </div>
+                                    <div class="thumbs-up">👍</div>
+                                    <div class="drink-icon">☕</div>
+                                </div>
+                                <div class="participant-name">Techno Fox</div>
+                                <div class="participant-vibe">in the zone</div>
+                            </div>
+                        </div>
+
+                        <!-- Participant 6 - Panda -->
+                        <div class="participant">
+                            <div class="participant-card">
+                                <div class="animal-avatar panda-avatar">
+                                    <div class="animal-face">
+                                        <div class="bear-ears">
+                                            <div class="bear-ear"></div>
+                                            <div class="bear-ear"></div>
+                                        </div>
+                                        <div class="panda-eyes">
+                                            <div class="panda-patch"></div>
+                                            <div class="panda-patch"></div>
+                                            <div class="eye"></div>
+                                            <div class="eye"></div>
+                                        </div>
+                                        <div class="animal-nose"></div>
+                                    </div>
+                                    <div class="thumbs-up">❤️</div>
+                                    <div class="drink-icon">🍵</div>
+                                </div>
+                                <div class="participant-name">Chill Panda</div>
+                                <div class="participant-vibe">loving this</div>
+                            </div>
+                        </div>
+
+                        <!-- Duplicate for seamless loop -->
+                        <div class="participant">
+                            <div class="participant-card">
+                                <div class="animal-avatar cat-avatar">
+                                    <div class="animal-face">
+                                        <div class="animal-ears">
+                                            <div class="ear"></div>
+                                            <div class="ear"></div>
+                                        </div>
+                                        <div class="animal-eyes">
+                                            <div class="eye"></div>
+                                            <div class="eye"></div>
+                                        </div>
+                                        <div class="animal-nose"></div>
+                                    </div>
+                                    <div class="thumbs-up">👍</div>
+                                    <div class="drink-icon">☕</div>
+                                </div>
+                                <div class="participant-name">DJ Whiskers</div>
+                                <div class="participant-vibe">vibing hard</div>
+                            </div>
+                        </div>
+
+                        <div class="participant">
+                            <div class="participant-card">
+                                <div class="animal-avatar dog-avatar">
+                                    <div class="animal-face">
+                                        <div class="dog-ears">
+                                            <div class="dog-ear"></div>
+                                            <div class="dog-ear"></div>
+                                        </div>
+                                        <div class="animal-eyes">
+                                            <div class="eye"></div>
+                                            <div class="eye"></div>
+                                        </div>
+                                        <div class="animal-nose"></div>
+                                        <div class="tongue"></div>
+                                    </div>
+                                    <div class="thumbs-up">❤️</div>
+                                    <div class="drink-icon">🍵</div>
+                                </div>
+                                <div class="participant-name">Bounce Buddy</div>
+                                <div class="participant-vibe">maximum energy</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Coffee & Matcha Menu -->
+            <div class="menu-section" id="menu">
+                <h2 class="section-title">Fuel Menu</h2>
+                <p class="menu-subtitle">liquid energy by christina</p>
+                
+                <div class="menu-unified">
+                    <div class="menu-column-unified">
+                        <div class="menu-header">
+                            <h3 class="menu-category">☕🍵 DRINKS</h3>
+                        </div>
+                        
+                        <div class="menu-items-grid">
+                            <div class="menu-item">
+                                <div class="item-name">AMERICANO</div>
+                                <div class="item-desc">espresso + hot water. simple power.</div>
+                            </div>
+
+                            <div class="menu-item">
+                                <div class="item-name">LATTE</div>
+                                <div class="item-desc">smooth espresso with steamed milk.</div>
+                            </div>
+
+                            <div class="menu-item">
+                                <div class="item-name">MOCHA</div>
+                                <div class="item-desc">espresso + chocolate. rich energy.</div>
+                            </div>
+
+                            <div class="menu-item">
+                                <div class="item-name">MATCHA</div>
+                                <div class="item-desc">pure green energy. traditional whisked.</div>
+                            </div>
+                        </div>
+
+                        <!-- Customization Options -->
+                        <div class="menu-customization">
+                            <div class="custom-section">
+                                <div class="custom-title">SWEETNESS</div>
+                                <div class="custom-options">
+                                    <span class="custom-option">NO SWEETNESS</span>
+                                    <span class="custom-option">50%</span>
+                                    <span class="custom-option">100%</span>
+                                </div>
+                            </div>
+                            <div class="custom-section">
+                                <div class="custom-title">MILK</div>
+                                <div class="custom-options">
+                                    <span class="custom-option">WHOLE MILK</span>
+                                    <span class="custom-option">COCONUT MILK</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid">
+                <div class="card">
+                    <div class="card-icon">🌅</div>
+                    <h3 class="card-title">Rave Energy in Daylight</h3>
+                    <p class="card-text">full club energy when most people are still waking up. sunrise intensity.</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon">🎧</div>
+                    <h3 class="card-title">Techno + Psytrance</h3>
+                    <p class="card-text">dj blurry curates raw, hypnotic beats. no chill vibes. pure momentum.</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon">☕</div>
+                    <h3 class="card-title">Fresh Coffee</h3>
+                    <p class="card-text">christina's on the bar. liquid fuel keeping the dancefloor alive.</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon">🏋️</div>
+                    <h3 class="card-title">Post-Workout Chaos</h3>
+                    <p class="card-text">straight from combine to the dancefloor. bodies warm, endorphins high.</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon">⚡</div>
+                    <h3 class="card-title">High BPM. High Smiles.</h3>
+                    <p class="card-text">fast beats. faster hearts. nothing but good vibes at maximum velocity.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Bring -->
+        <section class="section" id="bring">
+            <h2 class="section-title">Bring</h2>
+            <div class="bring-list">
+                <div class="bring-item">
+                    <span class="bring-icon">👕</span>
+                    <span>clothes you can sweat in</span>
+                </div>
+                <div class="bring-item">
+                    <span class="bring-icon">👟</span>
+                    <span>shoes you can dance in</span>
+                </div>
+                <div class="bring-item">
+                    <span class="bring-icon">☕</span>
+                    <span>caffeine tolerance</span>
+                </div>
+                <div class="bring-item">
+                    <span class="bring-icon">🌀</span>
+                    <span>that one friend who dances in spirals</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Warning -->
+        <div class="warning">
+            <p class="warning-text">you might not want a normal morning ever again.</p>
+        </div>
+
+        <!-- CTA -->
+        <div class="cta">
+            <button class="cta-button">
+                <span>I'M COMING</span>
+            </button>
+            <p class="cta-subtext">NS GYM // 1PM - 3PM // RIGHT AFTER COMBINE</p>
+        </div>
+
+        <!-- RSVP Section -->
+        <section class="rsvp-section" id="contact">
+            <h2 class="section-title">RSVP Now</h2>
+            <p class="rsvp-description">secure your spot on the dancefloor</p>
+            <div class="rsvp-container">
+                <div class="luma-logo">📅</div>
+                <p class="rsvp-text">Register on the Luma App to confirm your attendance and get event updates.</p>
+                <a href="#" class="luma-button" target="_blank" rel="noopener noreferrer">
+                    RSVP ON LUMA
+                </a>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p class="footer-text">BASS // SWEAT // CAFFEINE</p>
+        </footer>
+    </div>
+</body>
+</html>
